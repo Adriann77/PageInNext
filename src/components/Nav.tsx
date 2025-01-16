@@ -7,7 +7,7 @@ export default function Nav() {
       <Link href='/'>
         <Image
           className='w-40'
-          src='/Ikona.svg'
+          src='/Logo.svg'
           width={160}
           height={40}
           alt='logo'
