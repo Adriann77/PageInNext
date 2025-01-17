@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 import React from 'react';
 
 export default function SignUpForm() {
@@ -99,7 +100,28 @@ export default function SignUpForm() {
             placeholder='Podaj swoje hasło'
           />
         </div>
+        <div className='flex flex-col gap-1.5'>
+          <label
+            className='text-gray-200 text-sm'
+            htmlFor='passwordConfirm'
+          >
+            Potwierdź hasło
+          </label>
+          <input
+            className={cn(
+              'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
+            )}
+            type='password'
+            name='passwordConfirm'
+            id='passwordConfirm'
+            placeholder='Potwierdź swoje hasło'
+          />
+        </div>
       </div>
+      <button className='bg-blue-600 mb-8 shadow-lg shadow-blue-600/40 w-full text-white rounded-lg font-semibold py-3 text-lg hover:bg-blue-700 trasition-all duration-300'>
+        Dalej{' '}
+      </button>
+      <p className='text-gray-200 text-sm text-center'>Masz już konto?  <Link className='font-semibold underline decoration-gray-200' href='/login'>Zaloguj się</Link></p>
     </form>
   );
 }
