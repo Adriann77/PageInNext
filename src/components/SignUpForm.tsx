@@ -1,10 +1,32 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signupSchema } from '@/lib/zod';
+import { TSignupForm } from '@/lib/types';
 
 export default function SignUpForm() {
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<TSignupForm>({
+    resolver: zodResolver(signupSchema),
+  });
+
+  async function onSubmit(data: TSignupForm) {
+    console.log(data);
+  }
+
   return (
-    <form className='max-w-md mx-auto'>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className='max-w-md mx-auto'
+    >
       <button className='flex items-center justify-center gap-3 border border-gray-700 mb-4 text-gray-200 rounded-lg font-semibold px-12 w-full py-3 text-lg hover:bg-gray-900 transition-all duration-300'>
         <svg
           className='size-6'
@@ -61,10 +83,13 @@ export default function SignUpForm() {
               'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
             )}
             type='text'
-            name='name'
+            {...register('name')}
             id='name'
             placeholder='Podaj swoje imię'
           />
+          {errors.name && (
+            <p className='text-red-400 text-sm mt-1'>{errors.name.message}</p>
+          )}
         </div>
         <div className='flex flex-col gap-1.5'>
           <label
@@ -78,10 +103,13 @@ export default function SignUpForm() {
               'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
             )}
             type='email'
-            name='email'
+            {...register('email')}
             id='email'
             placeholder='Podaj swój email'
           />
+          {errors.email && (
+            <p className='text-red-400 text-sm mt-1'>{errors.email.message}</p>
+          )}
         </div>
         <div className='flex flex-col gap-1.5'>
           <label
@@ -95,10 +123,15 @@ export default function SignUpForm() {
               'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
             )}
             type='password'
-            name='password'
+            {...register('password')}
             id='password'
             placeholder='Podaj swoje hasło'
           />
+          {errors.password && (
+            <p className='text-red-400 text-sm mt-1'>
+              {errors.password.message}
+            </p>
+          )}
         </div>
         <div className='flex flex-col gap-1.5'>
           <label
@@ -112,16 +145,29 @@ export default function SignUpForm() {
               'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
             )}
             type='password'
-            name='passwordConfirm'
             id='passwordConfirm'
             placeholder='Potwierdź swoje hasło'
+            {...register('passwordConfirm')}
           />
+          {errors.passwordConfirm && (
+            <p className='text-red-400 text-sm mt-1'>
+              {errors.passwordConfirm.message}
+            </p>
+          )}
         </div>
       </div>
       <button className='bg-blue-600 mb-8 shadow-lg shadow-blue-600/40 w-full text-white rounded-lg font-semibold py-3 text-lg hover:bg-blue-700 trasition-all duration-300'>
         Dalej{' '}
       </button>
-      <p className='text-gray-200 text-sm text-center'>Masz już konto?  <Link className='font-semibold underline decoration-gray-200' href='/login'>Zaloguj się</Link></p>
+      <p className='text-gray-200 text-sm text-center'>
+        Masz już konto?{' '}
+        <Link
+          className='font-semibold underline decoration-gray-200'
+          href='/login'
+        >
+          Zaloguj się
+        </Link>
+      </p>
     </form>
   );
 }
