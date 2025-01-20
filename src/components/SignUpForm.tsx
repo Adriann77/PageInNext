@@ -81,6 +81,7 @@ export default function SignUpForm() {
           <input
             className={cn(
               'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
+              errors.name && 'border-red-400',
             )}
             type='text'
             {...register('name')}
@@ -101,6 +102,7 @@ export default function SignUpForm() {
           <input
             className={cn(
               'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
+              errors.email && 'border-red-400',
             )}
             type='email'
             {...register('email')}
@@ -121,6 +123,7 @@ export default function SignUpForm() {
           <input
             className={cn(
               'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
+              errors.password && 'border-red-400',
             )}
             type='password'
             {...register('password')}
@@ -143,6 +146,7 @@ export default function SignUpForm() {
           <input
             className={cn(
               'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
+              errors.passwordConfirm && 'border-red-400',
             )}
             type='password'
             id='passwordConfirm'
@@ -156,7 +160,11 @@ export default function SignUpForm() {
           )}
         </div>
       </div>
-      <button className='bg-blue-600 mb-8 shadow-lg shadow-blue-600/40 w-full text-white rounded-lg font-semibold py-3 text-lg hover:bg-blue-700 trasition-all duration-300'>
+      <button
+        type='submit'
+        // disabled
+        className='bg-blue-600 mb-8 shadow-lg shadow-blue-600/40 w-full text-white rounded-lg font-semibold py-3 text-lg hover:bg-blue-700 trasition-all duration-300 disabled:bg-blue-600/40'
+      >
         Dalej{' '}
       </button>
       <p className='text-gray-200 text-sm text-center'>
