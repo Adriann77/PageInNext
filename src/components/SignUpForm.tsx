@@ -80,7 +80,7 @@ export default function SignUpForm() {
           </label>
           <input
             className={cn(
-              'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
+              'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rounded-lg placeholder:text-gray-500 placeholder:text-base',
               errors.name && 'border-red-400',
             )}
             type='text'
@@ -101,7 +101,7 @@ export default function SignUpForm() {
           </label>
           <input
             className={cn(
-              'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
+              'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rounded-lg placeholder:text-gray-500 placeholder:text-base',
               errors.email && 'border-red-400',
             )}
             type='email'
@@ -122,7 +122,7 @@ export default function SignUpForm() {
           </label>
           <input
             className={cn(
-              'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
+              'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rounded-lg placeholder:text-gray-500 placeholder:text-base',
               errors.password && 'border-red-400',
             )}
             type='password'
@@ -145,7 +145,7 @@ export default function SignUpForm() {
           </label>
           <input
             className={cn(
-              'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rouned-lg placeholder:text-gray-500 placeholder:text-base',
+              'text-gray-200 text-base bg-transparent border border-gray-700 py-2.5 px-4 rounded-lg placeholder:text-gray-500 placeholder:text-base',
               errors.passwordConfirm && 'border-red-400',
             )}
             type='password'
