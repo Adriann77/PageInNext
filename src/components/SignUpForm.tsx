@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema } from '@/lib/zod';
 import { TSignupForm } from '@/lib/types';
+import { signupAction } from '@/actions/auth-actions';
 
 export default function SignUpForm() {
   const {
@@ -19,7 +20,7 @@ export default function SignUpForm() {
   });
 
   async function onSubmit(data: TSignupForm) {
-    console.log(data);
+    await signupAction(data)
   }
 
   return (
