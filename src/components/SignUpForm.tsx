@@ -20,7 +20,54 @@ export default function SignUpForm() {
   });
 
   async function onSubmit(data: TSignupForm) {
-    await signupAction(data)
+    const response = await signupAction(data);
+    if (response?.succes === false) {
+      if (
+        typeof response.errors === 'object' &&
+        response.errors?.name?.length
+      ) {
+        setError('name', { type: 'server', message: response.errors.name[0] });
+      }
+    }
+    if (response?.succes === false) {
+      if (
+        typeof response.errors === 'object' &&
+        response.errors?.email?.length
+      ) {
+        setError('email', {
+          type: 'server',
+          message: response.errors.email[0],
+        });
+      }
+    }
+    if (response?.succes === false) {
+      if (
+        typeof response.errors === 'object' &&
+        response.errors?.password?.length
+      ) {
+        setError('password', {
+          type: 'server',
+          message: response.errors.password[0],
+        });
+      }
+    }
+    if (response?.succes === false) {
+      if (
+        typeof response.errors === 'object' &&
+        response.errors?.passwordConfirm?.length
+      ) {
+        setError('passwordConfirm', {
+          type: 'server',
+          message: response.errors.passwordConfirm[0],
+        });
+      }
+    }
+    if (response.message) {
+      setError('root', {
+        type: 'server',
+        message: response.message[0],
+      });
+    }
   }
 
   return (
@@ -158,6 +205,11 @@ export default function SignUpForm() {
             <p className='text-red-400 text-sm mt-1'>
               {errors.passwordConfirm.message}
             </p>
+          )}
+          {errors.root && (
+            <>
+              <p className='text-red-400 text-sm mt-1'>{errors.root.message}</p>
+            </>
           )}
         </div>
       </div>
