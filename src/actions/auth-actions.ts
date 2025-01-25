@@ -37,10 +37,10 @@ export async function signupAction(data: unknown) {
       const verificationToken = await createVerificationToken(code, user.id);
       // await senfVerificationEmail(verificationToken.code)
     }
-  } catch  {
+  } catch {
     const message = 'Coś poszło nie tak, spróbuj ponownie';
-    return { succes: false, errors: {}, message};
+    return { succes: false, errors: {}, message };
   }
 
-  redirect(`/signup/verify-email?userid=${user.id}`); 
+  redirect(`/signup/verify-email?userid=${user.id}`);
 }
