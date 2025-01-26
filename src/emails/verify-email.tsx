@@ -37,11 +37,20 @@ export default function VerifyEmail({ code }: { code: string }) {
             <Heading className='text-gray-200 text-2xl font-semibold'>
               Potwierdź swój adres email
             </Heading>
-            <Text className='text-gray-200 text-base'>Wprowadź poniższy kod weryfikacyjny, aby potwierdzić swój adres email</Text>
+            <Text className='text-gray-200 text-base'>
+              Wprowadź poniższy kod weryfikacyjny, aby potwierdzić swój adres
+              email
+            </Text>
             <Text className='text-base font-semibold text-gray-200'>Kod</Text>
-            <Text className='text-4xl font-semibold text-gray-200 tracking-widest'>123456</Text>
-            <Text className='text-base text-gray-200'>Kod jest ważny przez 60 minut</Text>
-            <Text className='text-gray-200 text-sm italic'>Ta wiadomość została wygenerowana automatycznie</Text>
+            <Text className='text-4xl font-semibold text-gray-200 tracking-widest'>
+              {code}
+            </Text>
+            <Text className='text-base text-gray-200'>
+              Kod jest ważny przez 60 minut
+            </Text>
+            <Text className='text-gray-200 text-sm italic'>
+              Ta wiadomość została wygenerowana automatycznie
+            </Text>
           </Container>
         </Body>
       </Tailwind>

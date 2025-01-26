@@ -11,6 +11,7 @@ import {
 } from '@/lib/server-utils';
 import { signupSchema } from '@/lib/zod';
 import bcrypt from 'bcryptjs';
+import { sendVerificationEmail } from '@/lib/resend';
 
 export async function signupAction(data: unknown) {
   const validation = signupSchema.safeParse(data);
@@ -20,7 +21,7 @@ export async function signupAction(data: unknown) {
     return { succes: false, errors, message: '' };
   }
 
-  const { name, email, password, passwordConfirm } = validation.data;
+  const { name, email, password } = validation.data;
 
   let user;
 
@@ -35,7 +36,7 @@ export async function signupAction(data: unknown) {
       user = await upsertUser(name, email, passwordHash, undefined);
       const code = generateCode();
       const verificationToken = await createVerificationToken(code, user.id);
-      // await senfVerificationEmail(verificationToken.code)
+      await sendVerificationEmail(verificationToken.code)
     }
   } catch {
     const message = 'Coś poszło nie tak, spróbuj ponownie';
