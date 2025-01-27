@@ -45,3 +45,7 @@ export async function signupAction(data: unknown) {
 
   redirect(`/signup/verify-email?userid=${user.id}`);
 }
+
+export async function verifyEmailAction(data: unknown){
+  
+}

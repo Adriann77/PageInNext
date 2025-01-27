@@ -11,3 +11,7 @@ export const signupSchema = z
     message: 'Passwords missmatch',
     path: ['passwordConfirm'],
   });
+
+export const verifyEmailSchema = z.object({
+  code: z.string().max(6),
+});
