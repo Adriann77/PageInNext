@@ -7,9 +7,12 @@ import {
   createVerificationToken,
   generateCode,
   getUserByEmail,
+  getUserByID,
+  getVerificationTokenByUserID,
+  updateUserEmailByID,
   upsertUser,
 } from '@/lib/server-utils';
-import { signupSchema } from '@/lib/zod';
+import { signupSchema, verifyEmailSchema } from '@/lib/zod';
 import bcrypt from 'bcryptjs';
 import { sendVerificationEmail } from '@/lib/resend';
 
@@ -36,7 +39,7 @@ export async function signupAction(data: unknown) {
       user = await upsertUser(name, email, passwordHash, undefined);
       const code = generateCode();
       const verificationToken = await createVerificationToken(code, user.id);
-      await sendVerificationEmail(verificationToken.code)
+      await sendVerificationEmail(verificationToken.code);
     }
   } catch {
     const message = 'Coś poszło nie tak, spróbuj ponownie';
@@ -46,6 +49,43 @@ export async function signupAction(data: unknown) {
   redirect(`/signup/verify-email?userid=${user.id}`);
 }
 
-export async function verifyEmailAction(data: unknown){
-  
+export async function verifyEmailAction(data: unknown, userID: string | null) {
+  const validation = verifyEmailSchema.safeParse(data);
+  if (!validation.success) {
+    const errors = validation.error.flatten().fieldErrors;
+    return { succes: false, errors, message: '' };
+  }
+
+  const { code } = validation.data;
+
+  if (!userID) {
+    const message = 'Coś poszło nie tak.. spróbuj ponownie';
+    return { success: false, message: '', errors: {} };
+  }
+
+  try {
+    const verificationToken = await getVerificationTokenByUserID(code, userID);
+    if (!verificationToken) {
+      const message = 'Coś poszło nie tak.. spróbuj ponownie';
+      return { success: false, message: '', errors: {} };
+    }
+
+    const isActive = verificationToken.expiresAt > new Date();
+    if (!isActive) {
+      const message = 'Coś poszło nie tak.. spróbuj ponownie';
+      return { success: false, message: '', errors: {} };
+    }
+
+    const user = await getUserByID(verificationToken.userID);
+
+    if (!user) {
+      const message = 'Coś poszło nie tak.. spróbuj ponownie';
+      return { success: false, message: '', errors: {} };
+    }
+
+    const updatedUser = await updateUserEmailByID(user.id);
+  } catch (error) {
+    const message = 'Coś poszło nie tak.. spróbuj ponownie';
+    return { success: false, message: '', errors: {} };
+  }
 }

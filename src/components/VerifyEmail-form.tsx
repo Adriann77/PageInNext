@@ -6,9 +6,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { verifyEmailSchema } from '@/lib/zod';
 import { TVerifyEmailForm } from '@/lib/types';
-import { signupAction } from '@/actions/auth-actions';
+import { verifyEmailAction } from '@/actions/auth-actions';
+import { useSearchParams } from 'next/navigation';
 
 export default function VerifyEmailForm() {
+  const searchParams = useSearchParams();
+
+  const userID = searchParams.get('userid')
+
   const {
     register,
     handleSubmit,
@@ -19,7 +24,7 @@ export default function VerifyEmailForm() {
   });
 
   async function onSubmit(data: TVerifyEmailForm) {
-    const response = await signupAction(data);
+    const response = await verifyEmailAction(data, userID);
 
     if (response?.succes === false) {
       if (
@@ -32,7 +37,7 @@ export default function VerifyEmailForm() {
         });
       }
     }
-    if (response.message) {
+    if (response?.message) {
       setError('root', {
         type: 'server',
         message: response.message[0],

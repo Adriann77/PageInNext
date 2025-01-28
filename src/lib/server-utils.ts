@@ -26,12 +26,36 @@ export function generateCode() {
   return crypto.randomInt(min, max + 1).toString();
 }
 
-export async function createVerificationToken(code: string, userID:string){
-    return await prisma.verificationToken.create({
-        data:{
-            code,
-            userID,
-            expiresAt: new Date(Date.now() + ONE_HOUR_IN_MS)
-        }
-    })
+export async function createVerificationToken(code: string, userID: string) {
+  return await prisma.verificationToken.create({
+    data: {
+      code,
+      userID,
+      expiresAt: new Date(Date.now() + ONE_HOUR_IN_MS),
+    },
+  });
+}
+
+export async function getVerificationTokenByUserID(
+  code: string,
+  userID: string,
+) {
+  return await prisma.verificationToken.findUnique({
+    where: {
+      code_userID: { code, userID },
+    },
+  });
+}
+
+export async function getUserByID(userID: string) {
+  return await prisma.user.findUnique({
+    where: { id: userID },
+  });
+}
+
+export async function updateUserEmailByID(userID: string) {
+  await prisma.user.update({
+    where: { id: userID },
+    data: { emailVerified: true },
+  });
 }
