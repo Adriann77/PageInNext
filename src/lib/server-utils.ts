@@ -53,8 +53,8 @@ export async function getUserByID(userID: string) {
   });
 }
 
-export async function updateUserEmailByID(userID: string) {
-  await prisma.user.update({
+export async function updateUserEmailVerifiedByID(userID: string) {
+  return await prisma.user.update({
     where: { id: userID },
     data: { emailVerified: true },
   });

@@ -1,6 +1,6 @@
 'use server';
 
-import { VerificationToken } from './../../node_modules/.prisma/client/index.d';
+
 import { redirect } from 'next/navigation';
 
 import {
@@ -9,12 +9,12 @@ import {
   getUserByEmail,
   getUserByID,
   getVerificationTokenByUserID,
-  updateUserEmailByID,
+  updateUserEmailVerifiedByID,
   upsertUser,
 } from '@/lib/server-utils';
 import { signupSchema, verifyEmailSchema } from '@/lib/zod';
 import bcrypt from 'bcryptjs';
-import { sendVerificationEmail } from '@/lib/resend';
+import { sendVerificationEmail, sendWelcome } from '@/lib/resend';
 
 export async function signupAction(data: unknown) {
   const validation = signupSchema.safeParse(data);
@@ -60,32 +60,33 @@ export async function verifyEmailAction(data: unknown, userID: string | null) {
 
   if (!userID) {
     const message = 'Coś poszło nie tak.. spróbuj ponownie';
-    return { success: false, message: '', errors: {} };
+    return { success: false, message, errors: {} };
   }
 
   try {
     const verificationToken = await getVerificationTokenByUserID(code, userID);
     if (!verificationToken) {
       const message = 'Coś poszło nie tak.. spróbuj ponownie';
-      return { success: false, message: '', errors: {} };
+      return { success: false, message, errors: {} };
     }
 
     const isActive = verificationToken.expiresAt > new Date();
     if (!isActive) {
       const message = 'Coś poszło nie tak.. spróbuj ponownie';
-      return { success: false, message: '', errors: {} };
+      return { success: false, message, errors: {} };
     }
 
     const user = await getUserByID(verificationToken.userID);
 
     if (!user) {
       const message = 'Coś poszło nie tak.. spróbuj ponownie';
-      return { success: false, message: '', errors: {} };
+      return { success: false, message, errors: {} };
     }
 
-    const updatedUser = await updateUserEmailByID(user.id);
+    const updatedUser = await updateUserEmailVerifiedByID(user.id);
+    await sendWelcome(updatedUser.name);
   } catch (error) {
     const message = 'Coś poszło nie tak.. spróbuj ponownie';
-    return { success: false, message: '', errors: {} };
+    return { success: false, message, errors: {} };
   }
 }
