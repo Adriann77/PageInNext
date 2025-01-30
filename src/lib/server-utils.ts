@@ -1,4 +1,5 @@
-import { ONE_HOUR_IN_MS } from './constans';
+import { cookies } from 'next/headers';
+import { ONE_DAY_IN_MS, ONE_DAY_IN_S, ONE_HOUR_IN_MS } from './constans';
 import prisma from './prisma';
 import crypto from 'crypto';
 
@@ -57,5 +58,21 @@ export async function updateUserEmailVerifiedByID(userID: string) {
   return await prisma.user.update({
     where: { id: userID },
     data: { emailVerified: true },
+  });
+}
+
+export async function createSession(userID: string) {
+  const session = await prisma.session.create({
+    data: {
+      userID,
+      expiresAt: new Date(Date.now() + ONE_DAY_IN_MS),
+    },
+  });
+
+  (await cookies()).set('auth_token', session.id, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: ONE_DAY_IN_S,
+    sameSite: 'lax',
   });
 }

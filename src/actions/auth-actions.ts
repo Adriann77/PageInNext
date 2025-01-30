@@ -4,6 +4,7 @@
 import { redirect } from 'next/navigation';
 
 import {
+  createSession,
   createVerificationToken,
   generateCode,
   getUserByEmail,
@@ -84,9 +85,13 @@ export async function verifyEmailAction(data: unknown, userID: string | null) {
     }
 
     const updatedUser = await updateUserEmailVerifiedByID(user.id);
+    const newSession = await createSession(updatedUser.id)
     await sendWelcome(updatedUser.name);
   } catch (error) {
     const message = 'Coś poszło nie tak.. spróbuj ponownie';
     return { success: false, message, errors: {} };
   }
+
+
+  redirect('/')
 }
