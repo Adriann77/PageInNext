@@ -1,11 +1,11 @@
 'use server';
 
-
 import { redirect } from 'next/navigation';
 
 import {
   createSession,
   createVerificationToken,
+  deleteSessionByID,
   generateCode,
   getUserByEmail,
   getUserByID,
@@ -16,6 +16,7 @@ import {
 import { signupSchema, verifyEmailSchema } from '@/lib/zod';
 import bcrypt from 'bcryptjs';
 import { sendVerificationEmail, sendWelcome } from '@/lib/resend';
+import { cookies } from 'next/headers';
 
 export async function signupAction(data: unknown) {
   const validation = signupSchema.safeParse(data);
@@ -85,13 +86,27 @@ export async function verifyEmailAction(data: unknown, userID: string | null) {
     }
 
     const updatedUser = await updateUserEmailVerifiedByID(user.id);
-    const newSession = await createSession(updatedUser.id)
+    const newSession = await createSession(updatedUser.id);
     await sendWelcome(updatedUser.name);
   } catch (error) {
     const message = 'Coś poszło nie tak.. spróbuj ponownie';
     return { success: false, message, errors: {} };
   }
 
+  redirect('/');
+}
 
-  redirect('/')
+export async function logoutAction() {
+  const sessionID = (await cookies()).get('auth_token')?.value;
+
+  if (!sessionID) return null;
+
+  try {
+    await deleteSessionByID(sessionID);
+  } catch (error) {
+    return null;
+  }
+
+  (await cookies()).delete('auth_token');
+  redirect('/login');
 }
