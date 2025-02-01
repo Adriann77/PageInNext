@@ -1,5 +1,7 @@
+
 import { logoutAction } from '@/actions/auth-actions';
 import { getUserByID, verifySession } from '@/lib/server-utils';
+import { log } from 'console';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
@@ -39,8 +41,8 @@ const handleFormSubmit = async (): Promise<void> => {
           <p className='text-sm  text-gray-200'>{user.email}</p>
         </div>
       </div>
-
-      <form action={handleFormSubmit}>
+        
+      <form action={logoutAction}>
         <button
           className='border border-gray-700 text-gray-200 rounded-lg font-semibold px-12 py-3 text-lg hover:bg-gray-900 transition-all duration-300'
           type='submit'

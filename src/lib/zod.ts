@@ -15,3 +15,8 @@ export const signupSchema = z
 export const verifyEmailSchema = z.object({
   code: z.string().max(6),
 });
+
+export const loginSchema = z.object({
+  email: z.string().trim().min(1).max(32),
+  password: z.string().min(8).max(64),
+});
