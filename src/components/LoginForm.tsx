@@ -22,7 +22,7 @@ export default function LoginForm() {
   async function onSubmit(data: TLoginForm) {
     const response = await loginAction(data);
 
-    if (response?.succes === false) {
+    if (response?.success === false) {
       if (
         typeof response.errors === 'object' &&
         response.errors?.email?.length
@@ -33,7 +33,7 @@ export default function LoginForm() {
         });
       }
     }
-    if (response?.succes === false) {
+    if (response?.success === false) {
       if (
         typeof response.errors === 'object' &&
         response.errors?.password?.length
