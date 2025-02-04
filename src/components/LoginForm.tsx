@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, signupSchema } from '@/lib/zod';
 import { type TLoginForm } from '@/lib/types';
-import { loginAction } from '@/actions/auth-actions';
+import { createGoogleAuthURL, loginAction } from '@/actions/auth-actions';
 
 export default function LoginForm() {
   const {
@@ -53,12 +53,20 @@ export default function LoginForm() {
     }
   }
 
+  async function handleGoogleClick() {
+    await createGoogleAuthURL();
+  }
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className='max-w-md mx-auto'
     >
-      <button className='flex items-center justify-center gap-3 border border-gray-700 mb-4 text-gray-200 rounded-lg font-semibold px-12 w-full py-3 text-lg hover:bg-gray-900 transition-all duration-300'>
+      <button
+        className='flex items-center justify-center gap-3 border border-gray-700 mb-4 text-gray-200 rounded-lg font-semibold px-12 w-full py-3 text-lg hover:bg-gray-900 transition-all duration-300'
+        type='button'
+        onClick={handleGoogleClick}
+      >
         <svg
           className='size-6'
           viewBox='0 0 25 24'

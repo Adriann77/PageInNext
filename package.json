@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^3.10.0",
     "@prisma/client": "^6.2.1",
     "@react-email/components": "^0.0.32",
+    "arctic": "^3.2.2",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
     "next": "15.1.4",

@@ -17,6 +17,9 @@ import { loginSchema, signupSchema, verifyEmailSchema } from '@/lib/zod';
 import bcrypt from 'bcryptjs';
 import { sendVerificationEmail, sendWelcome } from '@/lib/resend';
 import { cookies } from 'next/headers';
+import { generateCodeVerifier, generateState } from 'arctic';
+import { TEN_MINUTES_IN_S } from '@/lib/constans';
+import { google } from '@/lib/oauth';
 
 export async function signupAction(data: unknown) {
   const validation = signupSchema.safeParse(data);
@@ -96,15 +99,15 @@ export async function verifyEmailAction(data: unknown, userID: string | null) {
   redirect('/');
 }
 
-export async function logoutAction() {
+export async function logoutAction(): Promise<void> {
   const sessionID = (await cookies()).get('auth_token')?.value;
 
-  if (!sessionID) return null;
+  if (!sessionID) return;
 
   try {
     await deleteSessionByID(sessionID);
   } catch (error) {
-    return null;
+    return;
   }
 
   (await cookies()).delete('auth_token');
@@ -140,11 +143,43 @@ export async function loginAction(data: unknown) {
     }
 
     const newSession = await createSession(user.id);
-   
   } catch (error) {
     const message = 'Nieprawidłowy email lub hasło';
     return { success: false, errors: {}, message };
   }
 
-   redirect('/');
+  redirect('/');
+}
+
+export async function createGoogleAuthURL() {
+  const state = generateState();
+  const codeVerifier = generateCodeVerifier();
+
+  (await cookies()).set('state', state, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: TEN_MINUTES_IN_S,
+    sameSite: 'lax',
+  });
+
+  (await cookies()).set('code_verifier', codeVerifier, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: TEN_MINUTES_IN_S,
+    sameSite: 'lax',
+  });
+
+  let url;
+
+  try {
+    url = await google.createAuthorizationURL(state, codeVerifier, [
+      'profile',
+      'email',
+    ]);
+  } catch (error) {
+    return null;
+  }
+
+
+  redirect(url.toString());
 }
